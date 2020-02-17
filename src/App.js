@@ -23,6 +23,16 @@ class App extends React.Component {
     users: []
   }
 
+  componentDidMount() {
+    Axios.get("http://localhost:3000/users").then((response) => {
+      this.setState({
+        users: response.data
+      })
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
   handleChange = (e) => {
     this.setState({
       [e.target.name]: {
@@ -104,23 +114,43 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="form">
-        <form onSubmit={this.handleSubmit}>
-          <label>Imię
+      <>
+        <div className="form">
+          <form onSubmit={this.handleSubmit}>
+            <label>Imię
 <input type="text" name="name" value={this.state.name.value} onChange={this.handleChange}></input></label>
-          <p>{this.state.name.error}</p>
-          <label>Nazwisko
+            <p>{this.state.name.error}</p>
+            <label>Nazwisko
 <input type="text" name="surname" value={this.state.surname.value} onChange={this.handleChange}></input></label>
-          <p>{this.state.surname.error}</p>
-          <label>Email
+            <p>{this.state.surname.error}</p>
+            <label>Email
 <input type="text" name="email" value={this.state.email.value} onChange={this.handleChange}></input></label>
-          <p>{this.state.email.error}</p>
-          <label>Telefon
+            <p>{this.state.email.error}</p>
+            <label>Telefon
 <input type="text" name="phone" value={this.state.phone.value} onChange={this.handleChange}></input></label>
-          <p>{this.state.phone.error}</p>
-          <button>Wyślij</button>
-        </form>
-      </div>
+            <p>{this.state.phone.error}</p>
+            <button>Wyślij</button>
+          </form>
+        </div>
+        <div className="users-list">
+          <h1>Lista użytkowników</h1>
+          {
+            this.state.users.map((user, index) => {
+              return (
+                <div className="user-container">
+                  <h2>Użytkownik nr: {index + 1}</h2>
+                  <h3>Imię: {user.name}</h3>
+                  <h3>Nazwosko: {user.surname}</h3>
+                  <h4>Email: {user.email}</h4>
+                  <h4>Telefon: {user.phone}</h4>
+                  <button onClick={() => this.changePersonalData(user.id)}>Zmień dane</button>
+                  <button onClick={() => this.removeUser(user.id)}>Usuń użytkownika</button>
+                </div>
+              )
+            })
+          }
+        </div>
+      </>
     )
   }
 
