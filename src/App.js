@@ -149,6 +149,23 @@ class App extends React.Component {
     }
   }
 
+  sendChangedData = (userId) => {
+    console.log(this.state.changeName.value)
+    Axios.put(`http://localhost:3000/users/${userId}`, { name: this.state.changeName.value, surname: this.state.changeSurname.value, email: this.state.changeEmail.value, phone: this.state.changePhone.value }).then((response) => {
+      console.log(response)
+      Axios.get("http://localhost:3000/users").then((response) => {
+        this.setState({
+          users: response.data,
+          index: null
+        })
+      }).catch((error) => {
+        console.log(error)
+      })
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
   render() {
     return (
       <>
