@@ -20,7 +20,20 @@ class App extends React.Component {
       value: "",
       error: ""
     },
-    users: []
+    users: [],
+    changeName: {
+      value: ""
+    },
+    changeSurname: {
+      value: ""
+    },
+    changeEmail: {
+      value: ""
+    },
+    changePhone: {
+      value: ""
+    },
+    index: null
   }
 
   componentDidMount() {
@@ -112,6 +125,30 @@ class App extends React.Component {
     }
   }
 
+  editUserData = (userId) => {
+    for (let i = 0; i < this.state.users.length; i++) {
+      if (this.state.users[i].id === userId) {
+        this.setState({
+          changeName: {
+            value: this.state.users[i].name
+          },
+          changeSurname: {
+            value: this.state.users[i].surname
+          },
+          changeEmail: {
+            value: this.state.users[i].email
+          },
+          changePhone: {
+            value: this.state.users[i].phone
+          },
+          index: userId
+        })
+        console.log(this.state.users[i].id)
+        console.log(userId)
+      }
+    }
+  }
+
   render() {
     return (
       <>
@@ -137,15 +174,29 @@ class App extends React.Component {
           {
             this.state.users.map((user, index) => {
               return (
-                <div className="user-container">
-                  <h2>Użytkownik nr: {index + 1}</h2>
-                  <h3>Imię: {user.name}</h3>
-                  <h3>Nazwosko: {user.surname}</h3>
-                  <h4>Email: {user.email}</h4>
-                  <h4>Telefon: {user.phone}</h4>
-                  <button onClick={() => this.changePersonalData(user.id)}>Zmień dane</button>
-                  <button onClick={() => this.removeUser(user.id)}>Usuń użytkownika</button>
-                </div>
+                <React.Fragment key={index}>
+                  {this.state.index !== user.id ? <div className="user-container">
+                    <h2>Użytkownik nr: {index + 1}</h2>
+                    <h3>Imię: {user.name}</h3>
+                    <h3>Nazwosko: {user.surname}</h3>
+                    <h4>Email: {user.email}</h4>
+                    <h4>Telefon: {user.phone}</h4>
+                    <button onClick={() => this.editUserData(user.id)}>Zmień dane</button>
+                    <button onClick={() => this.removeUser(user.id)}>Usuń użytkownika</button>
+                  </div> :
+                    <div className="changeData-container">
+                      <h2>Użytkownik nr: {user.id}</h2>
+                      <label>Imię
+<input type="text" name="changeName" value={this.state.changeName.value} onChange={this.handleChange} ></input></label>
+                      <label>Nazwisko
+<input type="text" name="changeSurname" value={this.state.changeSurname.value} onChange={this.handleChange} ></input></label>
+                      <label>Email
+<input type="text" name="changeEmail" value={this.state.changeEmail.value} onChange={this.handleChange} ></input></label>
+                      <label>Telefon
+<input type="text" name="changePhone" value={this.state.changePhone.value} onChange={this.handleChange} ></input></label>
+                      <button onClick={() => this.sendChangedData(user.id)}>Zatwierdź</button>
+                    </div>}
+                </React.Fragment>
               )
             })
           }

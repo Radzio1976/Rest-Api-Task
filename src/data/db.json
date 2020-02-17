@@ -6,6 +6,13 @@
       "email": "r.tomaszewski@gmail.com",
       "phone": "509998279",
       "id": 1
+    },
+    {
+      "name": "Marzena",
+      "surname": "Rosiak",
+      "email": "rosiak.marzena@tlen.pl",
+      "phone": "506853033",
+      "id": 2
     }
   ]
 }
