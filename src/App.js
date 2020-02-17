@@ -166,6 +166,21 @@ class App extends React.Component {
     })
   }
 
+  removeUser = (userId) => {
+    Axios.delete(`http://localhost:3000/users/${userId}`).then((response) => {
+      Axios.get("http://localhost:3000/users").then((response) => {
+        this.setState({
+          users: response.data,
+          index: null
+        })
+      }).catch((error) => {
+        console.log(error)
+      })
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
   render() {
     return (
       <>
@@ -195,7 +210,7 @@ class App extends React.Component {
                   {this.state.index !== user.id ? <div className="user-container">
                     <h2>Użytkownik nr: {index + 1}</h2>
                     <h3>Imię: {user.name}</h3>
-                    <h3>Nazwosko: {user.surname}</h3>
+                    <h3>Nazwisko: {user.surname}</h3>
                     <h4>Email: {user.email}</h4>
                     <h4>Telefon: {user.phone}</h4>
                     <button onClick={() => this.editUserData(user.id)}>Zmień dane</button>
