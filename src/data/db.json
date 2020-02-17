@@ -1,3 +1,11 @@
 {
-    "users": []
+  "users": [
+    {
+      "name": "Radosław",
+      "surname": "Tomaszewski",
+      "email": "r.tomaszewski@gmail.com",
+      "phone": "509998279",
+      "id": 1
+    }
+  ]
 }
