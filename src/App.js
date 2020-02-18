@@ -32,8 +32,7 @@ class App extends React.Component {
     },
     changePhone: {
       value: ""
-    },
-    index: null
+    }
   }
 
   componentDidMount() {
@@ -95,7 +94,7 @@ class App extends React.Component {
       isValid = false
     }
     if (isValid) {
-      Axios.post("http://localhost:3000/users", { name: this.state.name.value, surname: this.state.surname.value, email: this.state.email.value, phone: this.state.phone.value }).then((response) => {
+      Axios.post("http://localhost:3000/users", { name: this.state.name.value, surname: this.state.surname.value, email: this.state.email.value, phone: this.state.phone.value, isEdit: false }).then((response) => {
         Axios.get("http://localhost:3000/users").then((response) => {
           this.setState({
             users: response.data,
@@ -126,37 +125,41 @@ class App extends React.Component {
   }
 
   editUserData = (userId) => {
-    for (let i = 0; i < this.state.users.length; i++) {
-      if (this.state.users[i].id === userId) {
+    const users = this.state.users;
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].id === userId) {
+        users[i].isEdit = true;
         this.setState({
           changeName: {
-            value: this.state.users[i].name
+            value: users[i].name
           },
           changeSurname: {
-            value: this.state.users[i].surname
+            value: users[i].surname
           },
           changeEmail: {
-            value: this.state.users[i].email
+            value: users[i].email
           },
           changePhone: {
-            value: this.state.users[i].phone
+            value: users[i].phone
           },
-          index: userId
+          users
         })
-        console.log(this.state.users[i].id)
-        console.log(userId)
+      } else {
+        users[i].isEdit = false;
+        this.setState({
+          users
+        })
       }
     }
   }
 
   sendChangedData = (userId) => {
     console.log(this.state.changeName.value)
-    Axios.put(`http://localhost:3000/users/${userId}`, { name: this.state.changeName.value, surname: this.state.changeSurname.value, email: this.state.changeEmail.value, phone: this.state.changePhone.value }).then((response) => {
+    Axios.put(`http://localhost:3000/users/${userId}`, { name: this.state.changeName.value, surname: this.state.changeSurname.value, email: this.state.changeEmail.value, phone: this.state.changePhone.value, isEdit: false }).then((response) => {
       console.log(response)
       Axios.get("http://localhost:3000/users").then((response) => {
         this.setState({
-          users: response.data,
-          index: null
+          users: response.data
         })
       }).catch((error) => {
         console.log(error)
@@ -170,8 +173,7 @@ class App extends React.Component {
     Axios.delete(`http://localhost:3000/users/${userId}`).then((response) => {
       Axios.get("http://localhost:3000/users").then((response) => {
         this.setState({
-          users: response.data,
-          index: null
+          users: response.data
         })
       }).catch((error) => {
         console.log(error)
@@ -207,7 +209,7 @@ class App extends React.Component {
             this.state.users.map((user, index) => {
               return (
                 <React.Fragment key={index}>
-                  {this.state.index !== user.id ? <div className="user-container">
+                  {user.isEdit === false ? <div className="user-container">
                     <h2>Użytkownik nr: {index + 1}</h2>
                     <h3>Imię: {user.name}</h3>
                     <h3>Nazwisko: {user.surname}</h3>
